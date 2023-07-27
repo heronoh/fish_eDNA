@@ -1,8 +1,8 @@
 ---
-title: "Evaluation of detection power of three 12S makers for 40 selected species of the Jequitinhonha & São Francisco Rivers Basins"
+title: "DNA metabarcoding of mock communities highlights potential biases when assessing Neotropical fish diversity"
 author: 
   - "Hilário, OH; Mendes, IS; Sales, NG; Carvalho, DC"
-date: "10/03/2022"
+date: "27/07/2023"
 output: 
   html_document:
     code_download: yes
@@ -10,7 +10,7 @@ output:
     toc: true
     toc_depth: 4
     toc_float: true
-  pdf_document: default
+  bibliography: references.bib 
 editor_options:
   chunk_output_type: console
 ---
@@ -22,6 +22,32 @@ editor_options:
 ***
 
 \pagebreak
+
+
+# Abstract
+
+Despite the increasing popularity of DNA metabarcoding in the
+assessment of aquatic ecosystems using fish eDNA or ichthyoplankton,
+challenges have hampered its broader application in the Neotropical
+freshwaters. Using five mock communities composed of fish species from
+two Neotropical river basins, we evaluated the influence of DNA
+concentration and choice of mitochondrial 12S molecular markers
+(MiFish, NeoFish and Teleo) on species detection and Relative Read
+Abundance (RRA) using DNA metabarcoding. Of the three 12S markers
+analysed, only MiFish detected all species from all mock communities.
+The performance of a taxonomy-free approach using ASV/MOTUs was
+not as precise as assigning DNA reads to species using a curated 12S
+library that includes approximately 100 fish species, since more than one
+ASV/MOTU was observed for the same specimen. Thus, here we
+showcase the importance of a custom reference database to allow
+precise assignment of Neotropical fish species in metabarcoding studies
+and that the RRA is dependent on community composition, marker and
+DNA concentration. We highlight the importance of controlled
+experiments using known species communities before large investments
+are made in assessing biodiversity using non-invasive methods that
+apply DNA metabarcoding.
+
+
 
 # Bioinformatics
 
@@ -125,7 +151,7 @@ Chech overall quality of sequencing runs for all samples
 ```{bash, eval=FALSE,echo=TRUE}
 #Demultiplex SFJQ sample (MiFish & NeoFish mixed)
 #samples MiniSeq LGC
-cutadapt -j 79 --no-indels  -g file:/home/heron/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -G file:/home/heron/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -o /home/heron/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-{name1}-{name2}_R1_001.fastq.gz  -p /home/heron/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-{name1}-{name2}_R2_001.fastq.gz  /home/heron/runs/run_09fev21/fastq/all/SFJQ-neo-mi_S23_L001_R1_001.fastq  /home/heron/runs/run_09fev21/fastq/all/SFJQ-neo-mi_S23_L001_R2_001.fastq 2> /home/heron/runs/run_09fev21/fastq/all/sfjq_dmx/cut_SFJQ_demux.txt
+cutadapt -j 79 --no-indels  -g file:~/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -G file:~/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -o ~/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-{name1}-{name2}_R1_001.fastq.gz  -p ~/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-{name1}-{name2}_R2_001.fastq.gz  ~/runs/run_09fev21/fastq/all/SFJQ-neo-mi_S23_L001_R1_001.fastq  ~/runs/run_09fev21/fastq/all/SFJQ-neo-mi_S23_L001_R2_001.fastq 2> ~/runs/run_09fev21/fastq/all/sfjq_dmx/cut_SFJQ_demux.txt
 
 cp ~/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-neo_FWD-neo_REV.* ~/runs/run_01mar21/fastq/all/
 cp ~/runs/run_09fev21/fastq/all/sfjq_dmx/SFJQ-mif_FWD-mif_REV.* ~/runs/run_09fev21/fastq/all/
@@ -134,7 +160,7 @@ mv ~/runs/run_01mar21/fastq/all/SFJQ-neo-mi_S23_L001_R* ~/runs/run_01mar21/fastq
 
 
 #samples iSeq Ecomol
-cutadapt -j 79 --no-indels  -g file:/home/heron/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -G file:/home/heron/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -o /home/heron/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-{name1}-{name2}_R1_001.fastq.gz  -p /home/heron/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-{name1}-{name2}_R2_001.fastq.gz  /home/heron/runs/run_01mar21/fastq/all/Da23_S72_L001_R1_001.fastq /home/heron/runs/run_01mar21/fastq/all/Da23_S72_L001_R2_001.fastq 2> /home/heron/runs/run_01mar21/fastq/all/sfjq_dmx/cut_SFJQ_demux.txt
+cutadapt -j 79 --no-indels  -g file:~/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -G file:~/prjcts/fish_eDNA/sfjq/data/primers_neo_mi.fasta  -o ~/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-{name1}-{name2}_R1_001.fastq.gz  -p ~/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-{name1}-{name2}_R2_001.fastq.gz  ~/runs/run_01mar21/fastq/all/Da23_S72_L001_R1_001.fastq ~/runs/run_01mar21/fastq/all/Da23_S72_L001_R2_001.fastq 2> ~/runs/run_01mar21/fastq/all/sfjq_dmx/cut_SFJQ_demux.txt
 
 cp ~/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-neo_FWD-neo_REV.* ~/runs/run_01mar21/fastq/all/
 cp ~/runs/run_01mar21/fastq/all/sfjq_dmx/Da23-mif_FWD-mif_REV.* ~/runs/run_01mar21/fastq/all/
@@ -414,7 +440,7 @@ primers_in_Nreads <-
          tel_FWD_Reverse, tel_REV_Reverse, tel_FWD_RevComp, tel_REV_RevComp)
 
 
-#write.csv(x = primer_hits_tbl, file = "/home/heron/prjcts/fish_eDNA/notes/jequiDNApool/csv/primers_hits_in_reads.csv")
+#write.csv(x = primer_hits_tbl, file = "~/prjcts/fish_eDNA/notes/jequiDNApool/csv/primers_hits_in_reads.csv")
 
 str(primers_in_Nreads)
 colnames(primers_in_Nreads)
@@ -493,23 +519,6 @@ primers_tile <-
   ylab("Amostra") +
   ggtitle(label = "eDNA 1st, 2nd & 3rd runs",
               subtitle = "Primer presence on sample reads") 
-# +
-#   facet_wrap(~Run, drop = TRUE)
-  # facet_wrap(~Stage, drop = TRUE)
-# +
-#   facet_wrap(~Primer)
-  # annotate(geom = "rect", 
-  #          xmin=c(0.5), xmax=c(4.5),  #neo
-  #          ymin=0.5, ymax=116.5, 
-  #          alpha=0.05,fill="yellow") +
-  # annotate(geom = "rect", 
-  #          xmin=c(4.5), xmax=c(8.5),  #mif
-  #          ymin=c(0,116.5), ymax=c(86.5,158.5), 
-  #          alpha=0.05,fill="yellow")+
-  # annotate(geom = "rect", 
-  #          xmin=c(8.5), xmax=c(12.5),  tel
-  #          ymin=c(0,86.5), ymax=c(82.5,158.5), 
-  #          alpha=0.05,fill="yellow")
 
 primers_tile
 
@@ -634,11 +643,11 @@ primers_n_samples <- bind_rows(primers_n_samples,cutadapt_files)
 {
         all_fnFs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 cutadapt"]
         names(all_fnFs.cut) <- all_fnFs.cut %>% 
-            str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+            str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
             str_remove(pattern = "_cutadapt.fastq.gz")
         all_fnRs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 cutadapt"]
         names(all_fnRs.cut) <- all_fnRs.cut %>% 
-            str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+            str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
             str_remove(pattern = "_cutadapt.fastq.gz")
         
         all_fnFs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 N-cleaned"]
@@ -650,87 +659,87 @@ primers_n_samples <- bind_rows(primers_n_samples,cutadapt_files)
   #neo ----
   neo_fnFs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 cutadapt" & primers_n_samples$Primer == "NeoFish"]
     names(neo_fnFs.cut) <- neo_fnFs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   neo_fnRs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 cutadapt" & primers_n_samples$Primer == "NeoFish"]
     names(neo_fnRs.cut) <- neo_fnRs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   neo_fnFs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 N-cleaned" & primers_n_samples$Primer == "NeoFish"]
     names(neo_fnFs.filtN) <- neo_fnFs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
   
   neo_fnRs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 N-cleaned" & primers_n_samples$Primer == "NeoFish"]
     names(neo_fnRs.filtN) <- neo_fnRs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
     
   #mif ----
   mif_fnFs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 cutadapt" & primers_n_samples$Primer == "MiFish"]
     names(mif_fnFs.cut) <- mif_fnFs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   mif_fnRs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 cutadapt" & primers_n_samples$Primer == "MiFish"]
     names(mif_fnRs.cut) <- mif_fnRs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   mif_fnFs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 N-cleaned" & primers_n_samples$Primer == "MiFish"]
     names(mif_fnFs.filtN) <- mif_fnFs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
   
   mif_fnRs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 N-cleaned" & primers_n_samples$Primer == "MiFish"]
     names(mif_fnRs.filtN) <- mif_fnRs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
     
       
   #tel ----
   tel_fnFs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 cutadapt" & primers_n_samples$Primer == "Teleo"]
     names(tel_fnFs.cut) <- tel_fnFs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   tel_fnRs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 cutadapt" & primers_n_samples$Primer == "Teleo"]
     names(tel_fnRs.cut) <- tel_fnRs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   tel_fnFs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 N-cleaned" & primers_n_samples$Primer == "Teleo"]
     names(tel_fnFs.filtN) <- tel_fnFs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
   
   tel_fnRs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 N-cleaned" & primers_n_samples$Primer == "Teleo"]
     names(tel_fnRs.filtN) <- tel_fnRs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
     
           
   #neo/mif & neo/mif/tel ----
   nmt_fnFs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 cutadapt" & primers_n_samples$Primer %in% c("NeoFish/MiFish","NeoFish/MiFish/Teleo")]
     names(nmt_fnFs.cut) <- nmt_fnFs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   nmt_fnRs.cut <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 cutadapt" & primers_n_samples$Primer %in% c("NeoFish/MiFish","NeoFish/MiFish/Teleo")]
     names(nmt_fnRs.cut) <- nmt_fnRs.cut %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/cutadapt/")) %>% 
       str_remove(pattern = "_cutadapt.fastq.gz")
 
   nmt_fnFs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R1 N-cleaned" & primers_n_samples$Primer %in% c("NeoFish/MiFish","NeoFish/MiFish/Teleo")]
     names(nmt_fnFs.filtN) <- nmt_fnFs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
   
   nmt_fnRs.filtN <- primers_n_samples$`Read file`[primers_n_samples$Stage == "R2 N-cleaned" & primers_n_samples$Primer %in% c("NeoFish/MiFish","NeoFish/MiFish/Teleo")]
     names(nmt_fnRs.filtN) <- nmt_fnRs.filtN %>% 
-      str_remove(pattern = paste0("/home/heron/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
+      str_remove(pattern = paste0("~/prjcts/fish_eDNA/sfjq/data/reads/N-cleaned/")) %>% 
       str_remove(pattern = "_N-cleaned.fastq.gz")
   
 }
@@ -806,17 +815,6 @@ nmt_fnFs.filtN[i], nmt_fnRs.filtN[i],  # input files
 
 
 # as  Da23-mif & neo & SFJQ-mif & neo were previously demultiplexed, they do not bear the primers, so all reads are filtered out
-
-
-# have no time to implement a solution, so:
-#        cp ../N-cleaned/Da23-mif_R1_N-cleaned.fastq.gz Da23-mif_R1_cutadapt.fastq.gz
-#        cp ../N-cleaned/Da23-mif_R2_N-cleaned.fastq.gz Da23-mif_R2_cutadapt.fastq.gz
-#        cp ../N-cleaned/Da23-neo_R2_N-cleaned.fastq.gz Da23-neo_R2_cutadapt.fastq.gz
-#        cp ../N-cleaned/Da23-neo_R1_N-cleaned.fastq.gz Da23-neo_R1_cutadapt.fastq.gz
-#        cp ../N-cleaned/SFJQ-mif_R1_N-cleaned.fastq.gz SFJQ-mif_R1_cutadapt.fastq.gz
-#        cp ../N-cleaned/SFJQ-mif_R2_N-cleaned.fastq.gz SFJQ-mif_R2_cutadapt.fastq.gz
-#        cp ../N-cleaned/SFJQ-neo_R1_N-cleaned.fastq.gz SFJQ-neo_R1_cutadapt.fastq.gz
-#        cp ../N-cleaned/SFJQ-neo_R2_N-cleaned.fastq.gz SFJQ-neo_R2_cutadapt.fastq.gz
 
 
 ```
@@ -956,40 +954,6 @@ all_fnFs.cut
 all_fnRs.cut
 
 ```
-
-<br>
-
-#### View pre-filtering quality profiles
-
-```{r, eval=FALSE, echo=FALSE}
-# # 10 - plot quality profiles ----
-# cutFs
-# cutRs
-# 
-# #paths to cutadapt output after primer removal
-# #only NeoFish samples
-# neo_fnRs <- cutRs[str_detect(string = sample.names, pattern = "Neo")]
-# neo_fnFs <- cutFs[str_detect(string = sample.names, pattern = "Neo")]
-# #only MiFish samples
-# mif_fnFs <- cutFs[str_detect(string = sample.names, pattern = "Mi")]
-# mif_fnRs <- cutRs[str_detect(string = sample.names, pattern = "Mi")]
-# 
-# 
-# dev.off()
-# 
-# options(scipen=999)
-# 
-# plotQualityProfile(neo_fnFs[44]) #plot quality for all forward reads
-# plotQualityProfile(neo_fnRs[]) #plot quality for all reverse reads
-# 
-# plotQualityProfile(mif_fnFs[]) #plot quality for all forward reads
-# plotQualityProfile(mif_fnRs[]) #plot quality for all reverse reads
-# 
-```
-
-```{r, echo=FALSE, eval=FALSE}
-```
-
 
 <br>
 
@@ -1367,7 +1331,7 @@ all_track$File_name[all_track$File_name == "SFNorm-neo"] <- "Normalized SFmc\nNe
 
 
 writexl::write_xlsx(x = all_track,
-                    path = "/home/heron/prjcts/fish_eDNA/sfjq/results/sfjq_read_counts_along_quality_control.xlsx",
+                    path = "~/prjcts/fish_eDNA/sfjq/results/sfjq_read_counts_along_quality_control.xlsx",
                     col_names = TRUE,format_headers = TRUE)
 
 
@@ -1532,7 +1496,6 @@ Reads proportions are displayed below. The experimental design intended the same
 
 <br>
 
-
 <br>
 
 ## Classify taxonomy
@@ -1544,7 +1507,7 @@ On this step the ASVs identified by the **DADA2** pipeline, jointly for all libr
 #19 - classify taxonomy exactly ----
 
 all_sps <- dada2::assignSpecies(seqs = all_seqtab.nochim,allowMultiple = 10,
-                         refFasta =  "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/jul21/dada_tax_fullDB_order_SPs_jul21.fasta",
+                         refFasta =  "~/prjcts/fish_eDNA/data/refs/db/LGC/jul21/dada_tax_fullDB_order_SPs_jul21.fasta",
                          tryRC=TRUE,
                          n = 20000,
                          verbose = TRUE)
@@ -1564,7 +1527,7 @@ View(all_sps)
 #20 - classify taxonomy ----
 
 all_taxa <- dada2::assignTaxonomy(seqs = all_seqtab.nochim,
-                     refFasta =  "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/jul21/dada_tax_fullDB_order_jul21.fasta",
+                     refFasta =  "~/prjcts/fish_eDNA/data/refs/db/LGC/jul21/dada_tax_fullDB_order_jul21.fasta",
                            multithread=TRUE, tryRC=TRUE,taxLevels = c("Kingdom","Phylum","Class","Order","Family", "Genus", "Species","Specimen","Basin"),outputBootstraps = TRUE)
 
 
@@ -1592,7 +1555,7 @@ trainingSet <- LearnTaxa(dna, taxonomy)
 trainingSet
 
 
-LGC12Sdb <- Biostrings::readDNAStringSet(filepath ="/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/fev21/decipher_tax_fullDB_order_fev21.fasta" )
+LGC12Sdb <- Biostrings::readDNAStringSet(filepath ="~/prjcts/fish_eDNA/data/refs/db/LGC/fev21/decipher_tax_fullDB_order_fev21.fasta" )
 ##prepare DB
 LGC12Sdb_trainingSet <- DECIPHER::LearnTaxa(train = LGC12Sdb,taxonomy = names(LGC12Sdb))
 LGC12Sdb_trainingSet$problemGroups
@@ -1611,119 +1574,6 @@ View(asv_tax)
 
 
 library(decontam)
-
-
-```
-
-```{r, eval=FALSE,echo=FALSE}
-# DESeq2
-ls()
-rm(ranks2)
-
-
-
-# tax_tab <- as.matrix(read.table("ASVs_taxonomy-no-contam.tsv", header=T,
-           # row.names=1, check.names=F, sep="\t"))
-primers_n_samples
-sample_info_tab <- primers_n_samples[,1:6] %>%  unique()
-  # and setting the color column to be of type "character", which helps later
-# sample_info_tab$color <- as.character(sample_info_tab$color)
-asv_tab
-
-
-sample_info_tab <- sample_info_tab %>% as.data.frame()
-
-rownames(sample_info_tab) <- sample_info_tab$File_name
-
- # first we need to make a DESeq2 object
-deseq_counts <- DESeqDataSetFromMatrix(countData = asv_tab, colDat = sample_info_tab, design = ~Group) 
-    # we have to include the "colData" and "design" arguments because they are 
-    # required, as they are needed for further downstream processing by DESeq2, 
-    # but for our purposes of simply transforming the data right now, they don't 
-    # matter
-  
-
-deseq_counts <- estimateSizeFactors(deseq_counts, type = "poscounts")
-deseq_counts_vst <- varianceStabilizingTransformation(deseq_counts)
-    # NOTE: If you get this error here with your dataset: "Error in
-    # estimateSizeFactorsForMatrix(counts(object), locfunc =locfunc, : every
-    # gene contains at least one zero, cannot compute log geometric means", that
-    # can be because the count table is sparse with many zeroes, which is common
-    # with marker-gene surveys. In that case you'd need to use a specific
-    # function first that is equipped to deal with that. You could run:
-      # deseq_counts <- estimateSizeFactors(deseq_counts, type = "poscounts")
-    # now followed by the transformation function:
-      # deseq_counts_vst <- varianceStabilizingTransformation(deseq_counts)
-
-  # and here is pulling out our transformed table
-vst_trans_count_tab <- assay(deseq_counts_vst)
-
-  # and calculating our Euclidean distance matrix
-euc_dist <- dist(t(vst_trans_count_tab))
-
-euc_clust <- hclust(euc_dist, method="ward.D2")
-
-  # hclust objects like this can be plotted with the generic plot() function
-plot(euc_clust) 
-    # but i like to change them to dendrograms for two reasons:
-      # 1) it's easier to color the dendrogram plot by groups
-      # 2) if wanted you can rotate clusters with the rotate() 
-      #    function of the dendextend package
-
-euc_dend <- as.dendrogram(euc_clust, hang=0.1)
-dend_cols <- as.character(sample_info_tab$color[order.dendrogram(euc_dend)]) # tem que criar uma coluna de cores
-labels_colors(euc_dend) <- dend_cols
-
-plot(euc_dend, ylab="VST Euc. dist.")
-
-
-
-
-
- # making our phyloseq object with transformed table
-vst_count_phy <- otu_table(vst_trans_count_tab, taxa_are_rows=T)
-sample_info_tab_phy <- sample_data(sample_info_tab)
-vst_physeq <- phyloseq(vst_count_phy, sample_info_tab_phy)
-
-  # generating and visualizing the PCoA with phyloseq
-vst_pcoa <- ordinate(vst_physeq, method="MDS", distance="euclidean")
-eigen_vals <- vst_pcoa$values$Eigenvalues # allows us to scale the axes according to their magnitude of separating apart the samples
-
-plot_ordination(vst_physeq, vst_pcoa, color="char") + 
-  geom_point(size=1) + labs(col="type") + 
-  geom_text(aes(label=rownames(sample_info_tab), hjust=0.3, vjust=-0.4)) + 
-  coord_fixed(sqrt(eigen_vals[2]/eigen_vals[1])) + ggtitle("PCoA") + 
-  # scale_color_manual(values=unique(sample_info_tab$color[order(sample_info_tab$char)])) + 
-  theme(legend.position="none")
-
-
-vegan::rarecurve(t(asv_tab), step=100, 
-          # col=sample_info_tab$color,
-          lwd=2, ylab="ASVs", label=F)
-
-  # and adding a vertical line at the fewest seqs in any sample
-abline(v=(min(rowSums(t(asv_tab)))))
-abline(v=15000)
-
-
-=======
-## and classifying
-tax_info <- IdTaxa(test=dna, trainingSet=LGC12Sdb_trainingSet, strand="both", processors = NULL)
-
-
-
-#alpha div
-  # first we need to create a phyloseq object using our un-transformed count table
-count_tab_phy <- otu_table(asv_tab, taxa_are_rows=T)
-tax_tab_phy <- tax_table(asv_tax)
-
-ASV_physeq <- phyloseq(count_tab_phy, tax_tab_phy, sample_info_tab_phy)
-
-  # and now we can call the plot_richness() function on our phyloseq object
-plot_richness(ASV_physeq, color="Group", measures=c("Chao1", "Shannon")) + 
-  # scale_color_manual(values=unique(sample_info_tab$color[order(sample_info_tab$char)])) +
-  theme(legend.title = element_blank())
-
 
 
 ```
@@ -1821,94 +1671,57 @@ all_ps_tbl <- left_join(by = "ASV",x=all_ps_tbl,y= all_csv_sp)
 
 ```
 
-## Identify reads using NCBI BLASTn in house
+## metaBLASTEr - Identify ASVs with inhouse BLASTn
+
+
+This package is currently under development, but fully functional. You will need a working NCBI-BLAST+ installed and a BLAST formated reference DB on the same linux server your Rstudio-server is running (but we are improoving it to run on IOS).
 
 ```{r, echo=TRUE,eval=FALSE}
 # blastn ----
+
+install.packages('BLASTr', repos = "https://heronoh.r-universe.dev")
 # Annotate all ASVs by blastN
 
 asvs_blast <- all_ps_tbl$ASV %>% unique() %>% as.character() 
 
-class(asvs_blast)
-
-####### Lucio RQ - Execute shell commands #######
-shell_exec <- function(cmd, .envir = parent.frame()) {
-  if (!requireNamespace("processx", quietly = TRUE)) {
-    rlang::abort(message = "Package `processx` package is not installed.")
-  }
-  cmd_res <- processx::run(
-    command = "bash",
-    args = c("-c", glue::glue(cmd, .envir = .envir)), echo_cmd = FALSE
-  )
-  return(cmd_res)
-}
-########################
-
-######### function to get fasta names from db based on subjectIDs #############
-get_fasta_header <- function(id, db_path = "/data/databases/nt/nt") {
-  # id <- "JQ365494.1"
-  command <- "blastdbcmd -db {db_path} -entry {id} -outfmt %t"
-  result <- shell_exec(cmd = command)
-  return(result$stdout)
-}
-################################################################################
-
-#################### function to run blast for each ASV/ASV ####################
-run_blastn <- function(asv, db_path = "/data/databases/nt/nt", num_alignments = 3, num_thread = 40) {
-  # blast_cmd <- "echo -e '>seq1\n{asv}' | blastn -db {db_path} -outfmt 6 -perc_identity 95 -qcov_hsp_perc 95 -num_threads {as.character(num_thread)} -num_alignments {as.character(num_alignments)}"
-  blast_cmd <- "echo -e '>seq1\n{asv}' | blastn -db {db_path} -outfmt 6 -max_hsps 1 -perc_identity 95 -qcov_hsp_perc 95 -num_threads {as.character(num_thread)} -num_alignments {as.character(num_alignments)}"
-  blast_res <- shell_exec(cmd = blast_cmd)
-  return(blast_res)
-}
-
-## 
-get_blastn_results <- function(asv, num_thread = 40) {
-  blast_res <- run_blastn(asv, num_thread = num_thread)
-  if (blast_res$status != 0) {
-    rlang::abort(message = "Blast has not run correctly.")
-  }
-  `%>%` <- dplyr::`%>%`
-  
-  if (blast_res$stdout == "") {
-    # rlang::inform(glue::glue("Sequence {asv} not found."))
-    df_to_return <- tibble::tibble(`ASV` = asv)
-    return(df_to_return)
-  }
-  blast_table <- blast_res$stdout %>%
-    readr::read_delim(delim = "\t",
-      col_names = c("query","subject","indentity","length","mismatches","gaps",
-                  "query start","query end","subject start","subject end",
-                  "e-value","bitscore"),
-    trim_ws = TRUE, comment = "#"
-  )
-  
-  blast_table$`subject header` <- purrr::map_chr(blast_table$subject, get_fasta_header)
-  blast_table <- dplyr::relocate(blast_table, `subject header`)
-  blast_table <- tibble::rowid_to_column(blast_table, var = "res")
-  
-  blast_table <- tidyr::pivot_wider(blast_table, id_cols = subject,  names_from = res, values_from = seq_len(ncol(blast_table)), names_glue = "{res}_{.value}")
-  
-  blast_table <- blast_table %>%
-    dplyr::mutate(`ASV` = asv) %>%
-    dplyr::relocate(starts_with("3_")) %>%
-    dplyr::relocate(starts_with("2_")) %>%
-    dplyr::relocate(starts_with("1_")) %>%
-    dplyr::relocate(`ASV`)
-  return(blast_table)
-}
-###############################################################################
-
-# Versões paralelas
-cores_to_be_used <- future::availableCores() - 2 # Usar todos os cores -2 = 78
-future::plan(future::multisession(workers = cores_to_be_used))
 
 
-blast_res <- furrr::future_map_dfr(asvs_blast, get_blastn_results, num_thread = 1, .options = furrr::furrr_options(seed = NULL))
 
-# readr::write_csv(blast_res, "otu_blast_res_3_hit.csv")
+#Identify using metaBLASTr package ----
+# paralela com 2 threads ----
+tictoc::tic("Parallel - Furrr 2 threads")
 
-# blast_res_bckp <- blast_res
-# blast_res <- blast_res_bckp
+blast_res <- BLASTr::parallel_blast(
+  db_path = "/data/databases/nt_jun2023/nt",
+  asvs = asvs_blast_all,
+  out_file = "~/prjcts/fish_eDNA/sfjq/results/blast/blast_out_res_1.csv",
+  out_RDS = "~/prjcts/fish_eDNA/sfjq/results/blast/blast_out_res_1.RDS",
+  total_cores = 80,
+  perc_id = 80,
+  num_threads = 2,
+  perc_qcov_hsp = 80,
+  num_alignments = 3,
+  blast_type = "blastn"
+)
+
+tictoc::toc()# 
+
+
+# #Save env
+   base::save.image("~/prjcts/fish_eDNA/sfjq//env-canastra_posBLAST-25jul23.RData")
+
+   
+
+
+
+colnames(blast_res)
+
+# blast_res <- blast_res %>% rename("OTU" ="Sequence")
+# blast_res <- blast_res %>% rename("Sequence" ="OTU")
+
+blast_res_full <- bind_rows(blast_res) %>% 
+  select(-c("OTU")) %>%
+  filter(!is.na(`1_subject header`))
 
 nrow(blast_res)
 dim(blast_res)
@@ -2334,17 +2147,8 @@ smp_abd_ID <- all_ps_tbl_blast[rev(base::order(all_ps_tbl_blast$Abundance)),] %>
 dim(smp_abd_ID)
 
 writexl::write_xlsx(x = smp_abd_ID,
-                    path = "/home/heron/prjcts/fish_eDNA/sfjq/results/sfjq_all_analysis_info_06-03-22.xlsx",
+                    path = "~/prjcts/fish_eDNA/sfjq/results/sfjq_all_analysis_info_06-03-22.xlsx",
                     col_names = TRUE,format_headers = TRUE)
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2367,7 +2171,7 @@ ASVs_per_sample <- all_ps_tbl_blast %>%
 
 
 writexl::write_xlsx(x = ASVs_per_sample,
-                    path = "/home/heron/prjcts/fish_eDNA/sfjq/results/sfjq_ASVs_per_sample_06-07-21.xlsx",
+                    path = "~/prjcts/fish_eDNA/sfjq/results/sfjq_ASVs_per_sample_06-07-21.xlsx",
                     col_names = TRUE,format_headers = TRUE)
 
 
@@ -2425,28 +2229,7 @@ all_ps_tbl_bl_cur$`revised final ID`[(all_ps_tbl_bl_cur$`revised final ID` %in% 
 all_ps_tbl_bl_cur$`revised final ID`[(all_ps_tbl_bl_cur$`revised final ID` %in% c("Hoplias intermedius")) & 
                                        all_ps_tbl_bl_cur$Group %in% c("Non-normalized JQmc","Normalized JQmc")] <- "Hoplias brasiliensis"
 
-
-
-
-
-
-
 }
-
-
-
-
-
-
-# all_ps_tbl_bl_cur[all_ps_tbl_bl_cur$`revised final ID` %in% c("Pimelodus"),] %>% select(`ASV (Sequence)`) 
-# <- "Prochilodus argenteus/hartii"
-
-
-
-
-
-
-
 
 ```
 
@@ -2468,26 +2251,13 @@ As this was a controlled experiment, we must identify the species that were expe
 
 # expctd_sps_tbl <- read.csv(file = "~/prjcts/fish_eDNA/sfjq/data/sfjq_species.csv",
 # expctd_sps_tbl <- read.csv(file = "~/prjcts/fish_eDNA/sfjq/data/sfjq_species_06mar22.csv",
-# expctd_sps_tbl <- read.csv(file = "/home/heron/prjcts/fish_eDNA/sfjq/data/sfjq_species_10mar22.csv",
-expctd_sps_tbl <- read.csv(file = "/home/heron/prjcts/fish_eDNA/sfjq/data/sfjq_species_02jun22.csv",
+# expctd_sps_tbl <- read.csv(file = "~/prjcts/fish_eDNA/sfjq/data/sfjq_species_10mar22.csv",
+expctd_sps_tbl <- read.csv(file = "~/prjcts/fish_eDNA/sfjq/data/sfjq_species_02jun22.csv",
                            header = TRUE, check.names = FALSE) %>% as_tibble() 
 
 #mudei o T. chalceus de 0.0073 para 0.0299 no pool SF
 
 colnames(expctd_sps_tbl)[colnames(expctd_sps_tbl) == "Species"] <- "revised final ID"
-
-# expctd_sps_tbl <- expctd_sps_tbl %>% 
-#   mutate(`Percentage on respective Non-norm pool` = as.numeric(`Percentage on respective Non-norm pool`),
-#          `Percentage on respective Norm pool` = as.numeric(`Percentage on respective Norm pool`))
-
-# all_ps_tbl_blast$`final ID` %>% unique() %>% base::sort()%>% paste0(collapse = '", \n"') %>% cat()
-# all_ps_tbl_blast$`revised final ID` %>% unique() %>% base::sort()%>% paste0(collapse = '", \n"') %>% cat()
-
-# all_ps_tbl_blast$`revised final ID` %>% unique()
-# all_ps_tbl_blast$`revised final ID` %>% base::sort() %>% unique()
-
-
-
 
 ```
 
@@ -2681,164 +2451,13 @@ all_ps_tbl_sfjq_full <-  dplyr::bind_rows(all_ps_tbl_sfjq,all_ps_tbl_sf,all_ps_t
 
 all_ps_tbl_sfjq_full %>% colnames() %>% unique() %>% paste0(collapse = '",\n"') %>% cat()
 
-# all_ps_tbl_sfjq_full <- all_ps_tbl_sfjq_full %>% 
-#   select(c(
-#     "Sample",
-#     "Group",
-#     "Type",
-#     "Primer",
-#     "File_name",
-#     "Library",
-#     "Run",
-#     "final ID",
-#     "Abundance",
-#     "Relative abundance to all samples",
-#     "Relative abundance on sample",
-#     "Sample total abundance",
-#     "Kingdom",
-#     "Phylum",
-#     "Class",
-#     "Order",
-#     "Family",
-#     "Genus",
-#     "Species",
-#     "Specimen",
-#     "Basin",
-#     "exact Genus",
-#     "exact Species",
-#     "exact GenSp",
-#     # "1_subject header",
-#     # "1_subject",
-#     # "1_indentity",
-#     # "1_length",
-#     # "2_subject header",
-#     # "2_subject",
-#     # "2_indentity",
-#     # "2_length",
-#     # "3_subject header",
-#     # "3_subject",
-#     # "3_indentity",
-#     # "3_length",
-#     "ASV (Sequence)",
-#     "ASV size (pb)",
-#     "ASV header",
-#     "Expected length",
-#     "OTU",
-#     "revised final ID",
-#     "Full name",
-#     "LGCdb ID",
-#     "DNA concentration QUBIT (ng/ul)",
-#     "Input DNA",
-#     "Total DNA in NN pool",
-#     "Percentage on respective Non-norm pool",
-#     "Percentage on respective Norm pool",
-#     "Expected Species") )
 
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Pearson correlations between DNA input and sequence yield
+
 ```{r,echo=TRUE, eval=FALSE}
-
-
-#JQmc ----
-# {
-# jq_df_neo <- jq_proportions %>% 
-#   # filter(`Expected Species` %in% c("expected")) %>% 
-#   pivot_wider(names_from = Pool,values_from = `Relative abundance on sample`,id_cols = c(
-#   `final ID`,Primer),) %>% filter(Primer %in% c("NeoFish")) %>% 
-#   select(c(1,3,4)) %>% as.data.frame() %>% na.exclude()
-#   
-# 
-# jq_df_mif <- jq_proportions %>% 
-#   filter(`Expected Species` %in% c("expected")) %>% 
-#   pivot_wider(names_from = Pool,values_from = `Relative abundance on sample`,id_cols = c(
-#   `final ID`,Primer),) %>% filter(Primer %in% c("MiFish")) %>% 
-#   select(c(1,3,4)) %>% as.data.frame() %>% na.exclude()
-#   
-# 
-# jq_df_tel <- jq_proportions %>% 
-#   filter(`Expected Species` %in% c("expected")) %>% pivot_wider(names_from = Pool,values_from = `Relative abundance on sample`,id_cols = c(
-#   `final ID`,Primer),) %>% filter(Primer %in% c("Teleo")) %>% 
-#   select(c(1,3,4)) %>% as.data.frame() %>% na.exclude()
-# }
-# 
-# 
-# 
-# rownames(jq_df_neo) <-jq_df_neo$`final ID`
-# rownames(jq_df_mif) <-jq_df_mif$`final ID`
-# rownames(jq_df_tel) <-jq_df_tel$`final ID`
-# 
-# #neo
-# cor.test(x = jq_df_neo$`Percentage on respective Norm pool`,y=jq_df_neo$`Percentage on respective Non-norm pool` ,method = "pearson")
-# #mif
-# cor.test(x = jq_df_mif$`Percentage on respective Norm pool`,y=jq_df_mif$`Percentage on respective Non-norm pool` ,method = "pearson")
-# #teleo
-# cor.test(x = jq_df_tel$`Percentage on respective Norm pool`,y=jq_df_tel$`Percentage on respective Non-norm pool` ,method = "pearson")
-#   
-#   
-#   
-#   
-# 
-# 
-# #SFmc ----
-# 
-# sf_df_neo <- sf_proportions %>% 
-#   filter(`Expected Species` %in% c("expected")) %>% 
-#   pivot_wider(names_from = Pool,values_from = `Relative abundance on sample`,id_cols = c(
-#   `final ID`,Primer),) %>% filter(Primer %in% c("NeoFish")) %>% 
-#   select(c(1,3,4)) %>% as.data.frame() %>% na.exclude()
-#   
-# 
-# sf_df_mif <- sf_proportions %>% 
-#   filter(`Expected Species` %in% c("expected")) %>% 
-#   pivot_wider(names_from = Pool,values_from = `Relative abundance on sample`,id_cols = c(
-#   `final ID`,Primer),) %>% filter(Primer %in% c("MiFish")) %>% 
-#   select(c(1,3,4)) %>% as.data.frame() %>% na.exclude()
-#   
-# 
-# 
-# 
-# rownames(sf_df_neo) <-sf_df_neo$`final ID`
-# rownames(sf_df_mif) <-sf_df_mif$`final ID`
-# 
-# #neo
-# cor.test(x = sf_df_neo$`Percentage on respective Norm pool`,y=sf_df_neo$`Percentage on respective Non-norm pool` ,method = "pearson")
-# #mif
-# cor.test(x = sf_df_mif$`Percentage on respective Norm pool`,y=sf_df_mif$`Percentage on respective Non-norm pool` ,method = "pearson")
-# 
-# 
-# # ------------------------
-
-
-
 
 #correlação entre o DNA input e reads ABD -----
 
@@ -3178,14 +2797,6 @@ ggsave(file = "~/outros/sfjq_temp/SFJQ_NMDS.pdf",
      height =25,
      units = "cm",
      dpi = 300)
-# 
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/SFJQ_NMDS.svg",
-#      plot = nmds_PLOT,
-#      device = "svg",
-#      width = 14,
-#      height =10,
-#      dpi = 600)
-
 
 ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/SFJQ_NMDS.png",
      plot = nmds_PLOT,
@@ -3264,83 +2875,6 @@ all_vegan_meta_tbl %>%
 
 
 ```
-
-```{r echo=FALSE,eval=FALSE}
-
-# 
-# # convert the sample_data() within a phyloseq object to a vegan compatible data object
-# pssd2veg <- function(physeq) {
-#   sd <- sample_data(physeq)
-#   return(as(sd,"data.frame"))
-# }
-# 
-# 
-# # convert the otu_table() within a phyloseq object to a vegan compatible data object
-# psotu2veg <- function(physeq) {
-#   OTU <- otu_table(physeq)
-#   if (taxa_are_rows(OTU)) {
-#     OTU <- t(OTU)
-#   }
-#   return(as(OTU, "matrix"))
-# }
-# psotu2veg(all_ps@tax_table)
-
-
-
-```
-
-```{r,echo=FALSE, eval=FALSE}
-## Alpha and Beta diversity
-
-# 
-# library("microbiome")
-# microbiome::summarize_phyloseq(all_ps)
-# 
-# alpha_div <- all_ps %>% phyloseq::estimate_richness(split = T, measures = c("Observed", "Chao1", "Shannon")) %>%
-#   mutate(File_name = sample_names(all_ps)) # add sample IDs
-# 
-# alpha_div <- right_join(microbiome::meta(all_ps), # add metadata
-#                         alpha_div, by = "File_name")
-# 
-# # alpha_div <- left_join(alpha_div, primers_n_samples[,c(1,3)], by="File_name")
-# 
-# alpha_div_long <- reshape2::melt(alpha_div, measure.vars = c("Observed", "Chao1", "Shannon"))
-# 
-# shapiro.test(alpha_div$Observed)
-# 
-# shapiro.test(alpha_div$Chao1)
-# 
-# shapiro.test(alpha_div$Shannon)
-# 
-# group <- levels(as.factor(alpha_div$Group))
-# group <- group[c(9,10,14,16,17,18)]
-# group.pairs <- combn(seq_along(group), 2, simplify = FALSE, FUN = function(i)group[i])
-# 
-#   library(ggpubr)
-# colnames(alpha_div_long)
-# 
-# alpha_div_long %>% 
-#   filter(Group %in% c("JqNnorm", "JqNorm", "Positive control", "SFJQ", "SFnNorm","SFNorm")) %>% 
-# ggboxplot(x = "Group",y = "value",
-#                              xlab = FALSE, ylab = FALSE, fill = "Group",
-# # palette = c("gold2", "maroon4","royalblue4"),
-# facet.by = "variable",
-# scales = "free") +
-# rremove("x.text") +
-# rremove("x.ticks") +
-# stat_compare_means(comparisons = group.pairs,
-# size = 5,
-# family = "times",
-# method = "wilcox.test") +
-# theme(
-# legend.text = element_text(size=12),
-# axis.title = element_text(size=16),
-# axis.text.y = element_text(size=16),
-# axis.line = element_line(color="black"),
-# panel.background = element_rect(fill="white"),
-# strip.text.x = element_text(size=16))
-# 
-# ```
 
 ### Ploting ASVs
 
@@ -3602,52 +3136,6 @@ NA,"NA",
 
 ```
 
-### Count ASVs 
-
-Now we will count total ASVs and which were considered _in range_ or not for each sample
-
-
-```{r, eval = FALSE, echo=FALSE}
-
-
-
-# 
-# SFJQ_ps_tbl_blast <- all_ps_tbl_blast %>%
-#   filter(Type %in% c("DNA pool","Positive control")) %>%
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>% 
-#   filter(Abundance > 0)
-# 
-# 
-# SFJQ_ps_tbl_blast$`ASV (Sequence)` %>% unique()
-# 
-# 
-# 
-# #creat table with ASV counts per sample
-# ASVs_per_sample <- SFJQ_ps_tbl_blast %>%
-#      group_by(Sample) %>%
-#    summarise("Run" = unique(Run),
-#              "Group" = unique(Group),
-#              "Primer" = unique(Primer),
-#              "Total ASV" = length(unique(`ASV (Sequence)`[Abundance != 0])),
-#              "ASVs in range" = length(unique(`ASV (Sequence)`[Abundance != 0 & `Expected length` == "in range"])),
-#              "ASVs out of range" = length(unique(`ASV (Sequence)`[(`ASV (Sequence)`) != 0 & `Expected length` == "out of range"])),
-#              "ABD" = sum(Abundance),
-#              "UniqueSP" = length(unique(`final ID`[Abundance != 0 & `Expected length` == "in range"])))
-# 
-# ASVs_per_sample %>%  group_by(Primer) %>% 
-#   summarize(
-#     "SUM_Total ASV" = sum(`Total ASV`),
-#     "SUM_ASVs in range" = sum(`ASVs in range`),
-#     "SUM_ASVs out of range" = sum(`ASVs out of range`)) 
-# 
-# 
-# 
-# 
-# SFJQ_ps_tbl_blast %>% filter(`Expected length` %in% c("in range")) %>% select(`ASV (Sequence)`, `final ID`)%>% unique()
-
-
-```
-
 # Images arcticle
 
 ```{r,echo=FALSE,eval=FALSE}
@@ -3734,28 +3222,6 @@ ASVs_n_OTUs_tbl$`Expected species list`
 
 ASVs_n_OTUs_tbl$`Expected species list`[ASVs_n_OTUs_tbl$`ID type` %in% c("Species")]
 
-
-
-# ASVs & OTUS ----
-#todas amostras ----
-# ASVs_n_OTUS_plot <- ASVs_n_OTUs_tbl %>% 
-#   ggplot2::ggplot(aes(x=str_remove(Sample,"Normalized "),
-#                       y= Counts ,fill= `ID type`, group = `ID type`,col= Norm))+
-#   geom_bar(stat = "identity",position = "dodge")+
-#   xlab("Sample") +
-#   ylab("Counts") +
-#   theme_bw(base_size = 8) +
-#   theme(legend.position = "right",
-#         axis.text.x = element_text(angle = 45, hjust=1)) +
-#   # viridis::scale_fill_viridis(discrete = TRUE,alpha=0.75) +
-#   scale_fill_manual(values = c("#a8afb8", "#6a7481", "#353a41", "#25282d")) +
-#   scale_color_manual(values = c("#00000f","#969595"))+
-#   geom_segment(aes(x=0.5, xend=2.5, y=40, yend=40,linetype="Number of original\ncomposing species"), colour="black",size=0.5) +
-#   geom_segment(aes(x=2.5, xend=6.5, y=23, yend=23,linetype="Number of original\ncomposing species"), colour="black",size=0.5) +
-#   geom_segment(aes(x=6.5, xend=12.5, y=18, yend=18,linetype="Number of original\ncomposing species"), colour="black",size=0.5) + 
-#   guides(fill=guide_legend(title="Identification level")) +
-#   scale_linetype_manual("",values=c("Number of original\ncomposing species"=3)) +
-#   geom_vline(xintercept = c(2.5,6.5))
 
 
 # ASVs, OTUs and Species plot ----
@@ -4088,288 +3554,6 @@ ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/SFJQ_prop_sfjq.svg",
 
 
 
-# -----
-# 
-# all_ps_tbl_sfjq_full %>%
-#   # mutate(`Percentage on respective Non-norm pool` = sub("%","",`Percentage on respective Non-norm pool`)/100) %>%
-#   # filter(`Expected Species` %in% c("expected")) %>%
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>%
-#   # filter(SF %in% c(TRUE)) %>%
-#   filter(Sample %in% c(
-# # "Non-normalized JQmc\nMiFish", "Non-normalized JQmc\nNeoFish", "Non-normalized JQmc\nTeleo"
-# # # ,
-# # "Normalized JQmc\nMiFish","Normalized JQmc\nNeoFish","Normalized JQmc\nTeleo"
-# "Non-normalized SFmc\nMiFish","Non-normalized SFmc\nNeoFish",
-# "Normalized SFmc\nMiFish","Normalized SFmc\nNeoFish"
-# # # "Normalized SFJQmc\nMiFish", "Normalized SFJQmc\nNeoFish"
-# # # , "Positive Control\n(P.glauca)"
-#   )) %>%
-#   # select(c(1:15,64:77)) %>%  
-#   pivot_longer(cols = c("Percentage on respective Norm pool", "Percentage on respective Non-norm pool" ),
-#                names_to = "Pool",values_to = "Proportion") %>% 
-#   mutate(Proportion = as.numeric(str_remove(Proportion,"%"))) %>% 
-#   # # filter(Group %in% c("Normalized JQmc")) %>% select(Proportion) %>% unique()
-#    ggplot(aes(x= log2(`Relative abundance on sample`/Proportion),y= `final ID`, fill = Primer, col = Pool)) +
-#    geom_col(stat = "identity",position = "dodge")+
-#   scale_color_manual(values = c("#00000f","#969595"),
-#                      labels = c("Non-normalized","Normalized"))+
-#   scale_fill_manual(
-#     labels = c("NeoFish", "MiFish", "Teleo", "NeoFish/MiFish/Teleo", "NeoFish/MiFish"),
-#                      values = alpha(colour = colors5 ,alpha =  0.8))+
-#   xlab("Species") +
-#   ylab("Proportion of ASVs in sampe= divided by proportion of DNA input") +
-#   geom_vline(xintercept = 1) +
-#   facet_wrap(~Primer)
-# # +
-# #   coord_fixed(ratio = 1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#gráficos de barras para as espécies
-# 
-#  all_ps_tbl_sfjq %>%  
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>% 
-#   filter(Sample %in% c(
-# "Non-normalized JQmc\nMiFish", "Non-normalized JQmc\nNeoFish", "Non-normalized JQmc\nTeleo"
-# # ,
-# # "Normalized JQmc\nMiFish","Normalized JQmc\nNeoFish","Normalized JQmc\nTeleo"
-# # "Non-normalized SFmc\nMiFish","Non-normalized SFmc\nNeoFish",
-# # "Normalized SFmc\nMiFish","Normalized SFmc\nNeoFish",
-# # "Normalized SFJQmc\nMiFish", "Normalized SFJQmc\nNeoFish"
-# # , "Positive Control\n(P.glauca)"
-#   )) %>% 
-#   # filter(JQ==FALSE) %>% 
-#   # filter(`Relative abundance on sample` >= 0.05) %>%
-#   filter(!`final ID` %in% c("Poecilia reticulata mitochondr", "NA elegans/gilbert", 
-#                             "NA","Coptodon zillii",NA , "Pseudoplatystoma corruscans", 
-#                             "Acestrorhynchus lacustris", "Geophagus brasiliensis")) %>% 
-#   ggplot(aes(y=rev(`final ID`),x=Abundance, fill=Primer))+
-#   # ggchicklet::geom_chicklet(radius = grid::unit(1, 'mm'))
-#   geom_col(color = "black",size=0.5,
-#            position = position_dodge(width = 0.9)
-#            # position = "dodge"
-#            )+
-#   xlab("ASV Abundance (log10)") +
-#   ylab("Associated taxonomy") +
-#   theme_light(base_size = 20)+
-#   # coord_fixed(ratio = 1,expand = FALSE, xlim = c(-0.5,18))+
-#   scale_fill_manual(
-#     labels = c("NeoFish", "MiFish", "Teleo", "NeoFish/MiFish/Teleo", "NeoFish/MiFish"),
-#                      values = alpha(colour = colors5 ,alpha =  0.8))+
-#   annotate(geom = "rect",
-#            xmin = 0, xmax = 24,
-#            ymin = c(0.5,13.5,28.5,32.5),
-#            ymax = c(1.5,14.5,29.5,33.5),
-#            alpha=0.3,fill="yellow") 
-#  # +
-#  #  facet_wrap(Group~Primer,ncol = 3,drop = TRUE) 
-# 
-# 
-# 
-# 
-# 
-
-
-###########SFJQ
-
-#   SFJQ_asvs_bar <- all_ps_tbl_sfjq %>%  
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>% 
-#   filter(Sample %in% c(
-# # "Non-normalized JQmc\nMiFish","Non-normalized JQmc\nNeoFish", "Non-normalized JQmc\nTeleo",
-# # "Normalized JQmc\nMiFish","Normalized JQmc\nNeoFish","Normalized JQmc\nTeleo"
-# # "Non-normalized SFmc\nMiFish","Non-normalized SFmc\nNeoFish",
-# # "Normalized SFmc\nMiFish","Normalized SFmc\nNeoFish",
-# "Normalized SFJQmc\nMiFish", "Normalized SFJQmc\nNeoFish"
-# # , "Positive Control\n(P.glauca)"
-#   )) %>% 
-#   # filter(JQ==FALSE) %>% 
-#   # filter(`Relative abundance on sample` >= 0.05) %>%
-#   filter(!`final ID` %in% c("Poecilia reticulata mitochondr", "NA elegans/gilbert", 
-#                             "NA","Coptodon zillii",NA , "Pseudoplatystoma corruscans", 
-#                             "Acestrorhynchus lacustris", "Geophagus brasiliensis")) %>% 
-#   ggplot(aes(y=rev(`final ID`),x=log10(Abundance), fill=Primer))+
-#   # ggchicklet::geom_chicklet(radius = grid::unit(1, 'mm'))
-#   geom_bar(stat = "identity",color = "black",size=0.5 ,position = "dodge"
-#            )+
-#   xlab("ASV Abundance (log10)") +
-#   ylab("Associated taxonomy") +
-#   theme_light(base_size = 20)+
-#   coord_fixed(ratio = 1,expand = FALSE, xlim = c(-0.5,18))+
-#   scale_fill_manual(
-#     labels = c("NeoFish", "MiFish", "Teleo", "NeoFish/MiFish/Teleo", "NeoFish/MiFish"),
-#                      values = alpha(colour = colors5 ,alpha =  0.8))+
-#   annotate(geom = "rect",
-#            xmin = 0, xmax = 24,
-#            ymin = c(0.5,13.5,28.5,32.5),
-#            ymax = c(1.5,14.5,29.5,33.5),
-#            alpha=0.3,fill="yellow") 
-#   # +
-#   # facet_wrap(Group~Primer,ncol = 3,drop = TRUE) 
-# 
-# SFJQ_asvs_bar 
-# 
-# 
-# 
-# # 
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_SFJQ.pdf",
-#      plot = SFJQ_asvs_bar,
-#      device = "pdf",
-#      width = 18,
-#      height = 13,
-#      dpi = 600)
-# 
-# # 
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_SFJQ.png",
-#      plot = SFJQ_asvs_bar,
-#      device = "png",
-#      width = 18,
-#      height = 13,
-#      dpi = 300)
-# 
-# 
-
-
-###########Jequi
-# 
-# all_ps_tbl_sfjq$Sample %>% unique()
-# 
-# #!TODO naiara
-# JQ_asvs_bar <-
-#   all_ps_tbl_sfjq_full %>%
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>%
-#   filter(Sample %in% c(
-# "Non-normalized JQmc\nMiFish","Non-normalized JQmc\nNeoFish", "Non-normalized JQmc\nTeleo",
-# "Normalized JQmc\nMiFish","Normalized JQmc\nNeoFish","Normalized JQmc\nTeleo"
-# # "Non-normalized SFmc\nMiFish","Non-normalized SFmc\nNeoFish",
-# # "Normalized SFmc\nMiFish","Normalized SFmc\nNeoFish",
-# # "Normalized SFJQmc\nMiFish", "Normalized SFJQmc\nNeoFish"
-# # , "Positive Control\n(P.glauca)"
-#   )) %>%
-#   # filter(JQ==FALSE) %>%
-#   # filter(`Relative abundance on sample` >= 0.05) %>%
-#   filter(!`final ID` %in% c("Poecilia reticulata mitochondr", "NA elegans/gilbert",
-#                             "NA","Coptodon zillii",NA , "Pseudoplatystoma corruscans",
-#                             "Acestrorhynchus lacustris", "Geophagus brasiliensis")) %>%
-#   ggplot(aes(y=rev(`final ID`),x=log10(Abundance), fill=Primer))+
-#   # ggchicklet::geom_chicklet(radius = grid::unit(1, 'mm'))
-#   geom_col(stat = "identity",color = "black",size=2,
-#            # ,position = "dodge"
-#            position = position_dodge(width = 0.1,preserve = "single")
-#            )+
-#   xlab("ASV Abundance (log10)") +
-#   ylab("Associated taxonomy") +
-#   theme_light(base_size = 20)+
-#   coord_fixed(ratio = 1,expand = FALSE, xlim = c(-0.5,23))+
-#   scale_fill_manual(
-#     labels = c("NeoFish", "MiFish", "Teleo", "NeoFish/MiFish/Teleo", "NeoFish/MiFish"),
-#                      values = alpha(colour = colors5 ,alpha =  0.8))
-#   # annotate(geom = "rect",
-#   #          xmin = 0, xmax = 24,
-#   #          ymin = c(0.5,7.5,9.5,13.5,18.5,20.5),
-#   #          ymax = c(1.5,8.5,10.5,14.5,19.5,21.5),
-#   #          alpha=0.3,fill="yellow")
-#   #   +
-#   # facet_wrap(Primer~Group,ncol = 2,drop = TRUE)
-# 
-# JQ_asvs_bar
-# # 
-# # 
-# # # 
-# # 
-# # ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_JQ.pdf",
-# #      plot = JQ_asvs_bar,
-# #      device = "pdf",
-# #      width = 24,
-# #      height = 17,
-# #      dpi = 600)
-# # 
-# # 
-# # ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_JQ.png",
-# #      plot = JQ_asvs_bar,
-# #      device = "png",
-# #      width = 24,
-# #      height = 17,
-# #      dpi = 300)
-# 
-# ###########São Francisco
-# 
-# 
-# SF_asvs_bar <- all_ps_tbl_sfjq_full %>%  
-#   filter(Run %in% c("LGC_MiniSeq_1","LGC_MiniSeq_2")) %>% 
-#   filter(Sample %in% c(
-# # # "Non-normalized JQmc\nMiFish","Non-normalized JQmc\nNeoFish", "Non-normalized JQmc\nTeleo",
-# # "Normalized JQmc\nMiFish","Normalized JQmc\nNeoFish","Normalized JQmc\nTeleo"
-# "Non-normalized SFmc\nMiFish","Non-normalized SFmc\nNeoFish",
-# "Normalized SFmc\nMiFish","Normalized SFmc\nNeoFish"
-# # "Normalized SFJQmc\nMiFish", "Normalized SFJQmc\nNeoFish"
-# # , "Positive Control\n(P.glauca)"
-#   )) %>% 
-#   # filter(JQ==FALSE) %>% 
-#   # filter(`Relative abundance on sample` >= 0.05) %>%
-#   filter(!`final ID` %in% c("Poecilia reticulata mitochondr", "NA elegans/gilbert", "NA lepidura/xenodon", 
-#                             "NA","Coptodon zillii",NA , "Pseudoplatystoma corruscans", 
-#                             "Acestrorhynchus lacustris", "Geophagus brasiliensis",
-#                             "Astyanax lacustris")) %>% 
-#   ggplot(aes(y=rev(`final ID`),x=log10(Abundance), fill=Primer))+
-#   # ggchicklet::geom_chicklet(radius = grid::unit(1, 'mm'))
-#   geom_bar(stat = "identity",color = "black",size=0.5
-#            # ,position = "dodge"
-#            )+
-#   xlab("ASV Abundance (log10)") +
-#   ylab("Associated taxonomy") +
-#   theme_light(base_size = 20)+
-#   coord_fixed(ratio = 1,expand = FALSE, xlim = c(-0.5,18))+
-#   scale_fill_manual(
-#     labels = c("NeoFish", "MiFish", "Teleo", "NeoFish/MiFish/Teleo", "NeoFish/MiFish"),
-#                      values = alpha(colour = colors5 ,alpha =  0.8))+
-#   annotate(geom = "rect",
-#            xmin = 0, xmax = 18,
-#            ymin = c(9.5,20.5),
-#            ymax = c(10.5,21.5),
-#            alpha=0.3,fill="yellow") +
-#   facet_wrap(Group~Primer,ncol = 2,drop = TRUE)  
-# 
-# SF_asvs_bar
-# 
-# 
-# # 
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_SF.pdf",
-#      plot = SF_asvs_bar,
-#      device = "pdf",
-#      width = 18,
-#      height = 20,
-#      dpi = 600)
-# 
-# 
-# 
-# # 
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/sfjq_ASVbar_SF.png",
-#      plot = SF_asvs_bar,
-#      device = "png",
-#      width = 18,
-#      height = 20,
-#      dpi = 300)
-# 
-# 
-# 
-# 
-
 
 
 
@@ -4475,12 +3659,6 @@ names(tel_list_JQ_Nnorm) <- "Teleo - poool JQ - Non-normalized"
 sapply(sps_per_pool, length)
 
 
-
-
-
-
-
-
 #venn diagram ----
 
 sf_norm_venn <- c(all_sps_SF,neo_list_SF_norm,mif_list_SF_norm)
@@ -4536,13 +3714,6 @@ sfjq_sps_list <- all_ps_tbl_sfjq_full %>%
 names(sfjq_sps_list) <- unique(all_ps_tbl_sfjq_full$`final ID`)
 
 
-
-
-
-
-
-
-
 sfjq_sps_list %>% str()
 
 library("UpSetR")
@@ -4553,13 +3724,7 @@ length(sfjq_sps_list)
 UpSetR::upset(UpSetR::fromList(sfjq_sps_list), order.by = "freq",nsets = length(sfjq_sps_list),nintersects = 100)
 UpSetR::upset(UpSetR::fromList(sfjq_sps_list), order.by = "freq",nsets = length(sfjq_sps_list),nintersects = 100)
 
- 
-
-
-
-
 genomes_orths_df %>% pheatmap::pheatmap()
-
 
 genomes_orths_df %>% colSums() %>% table() %>% plot()
 
@@ -5108,7 +4273,7 @@ scales::show_col(colors5)
 
 ```
 
-##gráficos de correlação DNA/RRA
+## DNA/RRA correlation plots
 ```{r echo=TRUE,eval=FALSE}
 
 colnames(all_ps_tbl_sfjq_full_uniq)
@@ -5307,18 +4472,13 @@ ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/SF_RRA_DNA_bySp.png", plot =
 
 
 
-
-
-
-
-
 ```
 
 
 
 
 
-##  Gráficos Daniel
+##  Aditional Graphics
 ```{r echo=TRUE,eval=FALSE}
 # set colors ----
 
@@ -5337,7 +4497,7 @@ scales::show_col(colors6)
 # carregando tabela 
 # https://docs.google.com/spreadsheets/d/1sTsOaI999E9Py_f4ll5j838r7CVc991a8mPmd8LvykU/edit#gid=0
 
-tab_curated_SFJQ_all_pools <- read.csv("/home/heron/prjcts/fish_eDNA/sfjq/data/SFJQ_all_pools-tabelas_curadas_para_o_R-SFJQmc-copy.csv",check.names = F) %>% 
+tab_curated_SFJQ_all_pools <- read.csv("~/prjcts/fish_eDNA/sfjq/data/SFJQ_all_pools-tabelas_curadas_para_o_R-SFJQmc-copy.csv",check.names = F) %>% 
   as_tibble()
 
 tab_curated_SFJQ_all_pools <- tab_curated_SFJQ_all_pools %>% 
@@ -5417,7 +4577,7 @@ SFJQmc_tree <- read.tree("~/prjcts/fish_eDNA/sfjq/data/trees/SFJQmc-38_SPs_fused
 ## species metadata ----
 ### read table with pools species, input DNA and RRA
 # tab_curated_SFJQ_all_pools <- read.csv("~/outros/sfjq_temp/SFJQ_all_pools-tabelas_curadas_para_o_R-SFJQmc.csv",check.names = F)
-# tab_curated_SFJQ_all_pools <- read.csv("/home/heron/prjcts/fish_eDNA/sfjq/data/SFJQ_all_pools-tabelas_curadas_para_o_R-SFJQmc.csv",check.names = F) %>% 
+# tab_curated_SFJQ_all_pools <- read.csv("~/prjcts/fish_eDNA/sfjq/data/SFJQ_all_pools-tabelas_curadas_para_o_R-SFJQmc.csv",check.names = F) %>% 
 #   as_tibble()
 # 
 # tab_curated_SFJQ_all_pools
@@ -5428,11 +4588,6 @@ SFJQmc_tree <- read.tree("~/prjcts/fish_eDNA/sfjq/data/trees/SFJQmc-38_SPs_fused
 tab_curated_SFJQ_all_pools %>% colnames()
 tab_curated_SFJQ_all_pools %>% unique()
 all_ps_tbl_sfjq_full_uniq %>% colnames()
-
-
-
-
-
 
 
 
@@ -5806,20 +4961,6 @@ ggsave(file = "~/outros/sfjq_temp/trees/SFmc-23_SPs_fused-unique-RRA_barplot.pdf
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # JQmc ----
 
 ## build tree ----
@@ -5950,17 +5091,6 @@ rotateNodes(tree = JQmc_tree, "all") %>%
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ### convert ape tree to prettier ggtree object
 JQmc_tree_plot <- ggtree(JQmc_tree) + 
   theme_tree2() +
@@ -6019,16 +5149,6 @@ JQmc_RRA_plot <-
 
 # ggsave(file = "~/prjcts/fish_eDNA/sfjq/data/trees/JQmc-23_SPs_fused-unique-RRA_barplot.pdf", plot = JQmc_RRA_plot, device = "pdf", width = 24, height = 20, units = "cm", dpi = 600)
 ggsave(file = "~/outros/sfjq_temp/trees/JQmc-17_SPs_fused-unique-RRA_barplot.pdf", plot = JQmc_RRA_plot, device = "pdf", width = 30, height = 30, units = "cm", dpi = 600)
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6124,14 +5244,6 @@ treeNbar_plot  <- function(){
     
   }  
   
-    
-  
-  
-  
-  
-  
-  
-  
 
 # https://www.r-bloggers.com/2016/12/add-layer-to-specific-panel-of-facet_plot-output-2/
 # facet_plot(tree_plot, panel = 'Stacked Barplot', 
@@ -6194,25 +5306,6 @@ extract_tree_data <- function(tree_disp, displayorder=TRUE) {
 SPs_order_in_tree <- extract_tree_data(tree_plot) %>% 
     dplyr::filter(isTip) %>% 
     dplyr::pull(label)
-
-
-
-
-
-
-
-
-
-## add resuts to tree ----
-
-# import tree ----
-
-
-
-
-
-
-
 
 
 
@@ -6385,7 +5478,6 @@ ggplotly(p = fold_change_boxplot)
   
   
   
-  
   ggplot(aes(y = Species,
              x = `Fold Change`,
              col = Primer)) +
@@ -6400,16 +5492,7 @@ ggplotly(p = fold_change_boxplot)
       scale_color_manual(values = colors6[c(1,3,5)]) +
   theme(axis.text.x = element_text(angle = 45)) 
 
-
-
-
-
-
-
-
-# ggsave(file = "~/prjcts/fish_eDNA/sfjq/data/trees/JQmc-23_SPs_fused-unique-RRA_barplot.pdf", plot = JQmc_RRA_plot, device = "pdf", width = 24, height = 20, units = "cm", dpi = 600)
-# ggsave(file = "~/outros/sfjq_temp/trees/sfjq_foldchange_boxplot.pdf", plot = fold_change_boxplot, device = "pdf", width = 40, height = 20, units = "cm", dpi = 600)
-ggsave(file = "/home/heron/prjcts/fish_eDNA/sfjq/results/figs/jun22_sfjq_foldchange_boxplot.pdf", plot = fold_change_boxplot, device = "pdf", width = 40, height = 24, units = "cm", dpi = 600)
+ggsave(file = "~/prjcts/fish_eDNA/sfjq/results/figs/jun22_sfjq_foldchange_boxplot.pdf", plot = fold_change_boxplot, device = "pdf", width = 40, height = 24, units = "cm", dpi = 600)
 
 
 
@@ -6455,13 +5538,35 @@ tib_curated_SFJQ_all_pools %>%
 
 ```
 
+# References
+
+This analyses were based and inpired on other incredible resources, listed below:
+
+* [Sample(Ecology) -- Jon Lefcheck](https://jonlefcheck.net/2012/10/24/nmds-tutorial-in-r/#:~:text=Keep%20going%2C%20and%20imagine%20as,and%20to%20spare%20your%20thinker).)
+
+* [Principal Component Analysis in R: prcomp vs princomp -- kassambara  ](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/)
+    
+* [Analysis of community ecology data in R -- David Zelený](https://www.davidzeleny.net/anadat-r/doku.php/en:pcoa_nmds)
 
 
 
 
+```{r echo=FALSE,eval=FALSE}
+#cite
+# https://jonlefcheck.net/2012/10/24/nmds-tutorial-in-r/#:~:text=Keep%20going%2C%20and%20imagine%20as,and%20to%20spare%20your%20thinker).
+
+# http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/
+
+# https://www.davidzeleny.net/anadat-r/doku.php/en:pcoa_nmds
+
+```
+
+<br>
 
 
 
+
+#Bonus 
 
 ## NeoFish redesign
 
@@ -6484,28 +5589,8 @@ tib_curated_SFJQ_all_pools %>%
 
 #0- load libraries ----
 {
-  # library(dada2)
-  # library(Rcpp)
-  # library(dplyr)
-  # library(tidyr)
-  # library(tibble)
-  # library(stringr)
-  # library(spider)
-  # library(ape)
-  # library(RColorBrewer)
-  # library(ggplot2)
   library(ggseqlogo)
-  # library(ips)
-  # library(ggrepel)
-  # library(viridis)
-  # library(phyloseq)
-  # library(Biostrings)
-  # library(ShortRead)
-  # library(pheatmap)
   library(DECIPHER)
-  # library(jpeg)
-  # library(ggdendro)
-  # library(readr)
 }
 #1- import seqs to db ----
 
@@ -6514,7 +5599,7 @@ db_fish12S <- dbConnect(SQLite(), "~/outros/sfjq_temp/db/fish12S_all_seqs_nov21.
 
 
 #sequências do LGC 12S db
-# Seqs2DB(seq = "/home/heron/prjcts/fish_eDNA/",
+# Seqs2DB(seq = "~/prjcts/fish_eDNA/",
 Seqs2DB(seq = "~/outros/sfjq_temp/db/dada_tax_fullDB_order_SPs_dez21.fasta",
         type =  "FASTA",dbFile =  db_fish12S, identifier =  "LGC 12S DB")
 
@@ -6764,7 +5849,7 @@ dna_order <- dna_alg_sub[order(DB_tbl$Cluster),]
 
 
 writeXStringSet(x = dna_order,
-                filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/DB_order_clust.fasta",
+                filepath = "~/prjcts/fish_eDNA/data/refs/db/DB_order_clust.fasta",
                 format = "fasta")
 
 # this file was used to generate a MLtree on MEGAX, to identify identic sequences
@@ -6957,8 +6042,8 @@ final_dna_clean <- final_dna_order
 
 
 #write fasta
-writeXStringSet(x = final_dna_clean,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/fev21/dada_tax_fullDB_order_fev21.fasta",format = "fasta")
-# writeXStringSet(x = final_dna_clean,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/dada_tax_fullDB_order.fasta",format = "fasta")
+writeXStringSet(x = final_dna_clean,filepath = "~/prjcts/fish_eDNA/data/refs/db/LGC/fev21/dada_tax_fullDB_order_fev21.fasta",format = "fasta")
+# writeXStringSet(x = final_dna_clean,filepath = "~/prjcts/fish_eDNA/data/refs/db/LGC/dada_tax_fullDB_order.fasta",format = "fasta")
 
 
 
@@ -6985,8 +6070,8 @@ final_dna_order <- final_dna[order(DB_tbl$Cluster),]
 final_dna_clean <- final_dna_order
 
 #write fasta
-# writeXStringSet(x = final_dna_clean,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/dada_tax_fullDB_order_SPs.fasta",format = "fasta")
-writeXStringSet(x = final_dna_clean,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/LGC/fev21/dada_tax_fullDB_order_SPs_fev21.fasta",format = "fasta")
+# writeXStringSet(x = final_dna_clean,filepath = "~/prjcts/fish_eDNA/data/refs/db/LGC/dada_tax_fullDB_order_SPs.fasta",format = "fasta")
+writeXStringSet(x = final_dna_clean,filepath = "~/prjcts/fish_eDNA/data/refs/db/LGC/fev21/dada_tax_fullDB_order_SPs_fev21.fasta",format = "fasta")
 
 
 
@@ -7083,259 +6168,6 @@ BrowseSeqs(neo_FWD_seqs[c(
   "SF | Microglanis leptostriatus | 1104",
   "SF | Pseudopimelodus sp | 0671")],colorPatterns = FALSE,highlight = 1) #neo FWD seqs
 
-
-###############################################
-                                                                       20        
-                                                     '''''''''|'''''''''|        
-                                          neo_FWD    CGCCGTCGCAAGCTTACCCT    20    
-               SF | Synbranchus marmoratus | 1404    ········TC·········C    20    
-               SF | Synbranchus marmoratus | 1405    ········TC·········C    20    
-               Jq | Oligosarcus macrolepis | 7690    ·A·················C    20    
-              SF | Leporinus macrocephalus | 0982    ···················C    20    
-    SFJq2 | Conorhynchos conirostris | JX899737.1    ·A······TC·········C    20    
-             Jq | Rhamdia cf jequitinhonha | 3054    ········TC·········C    20    
-              SF | Cetopsorhamdia iheringi | 1372    ········TC·········C    20    
-                   SF | Imparfinis minutus | 1161    ········TC·········C    20    #
-                   SF | Imparfinis minutus | 1370    ········TC·········C    20    
-                       SF | Rhamdia quelen | 1361    ·······AT······G····    20    
-                   Jq | Rhamdia aff quelen | 5645    ········T······G····    20    #
-                  SF | Pimelodella vittata | 1287    ···············G····    20    
-                  SF | Pimelodella vittata | 1288    ···············G····    20    
-                  SF | Pimelodella vittata | 1289    ···············G····    20    
-          SF | Pseudoplatystoma corruscans | 1135    ········TC·········C    20    
-          Jq | Steindachneridion amblyurum | 2996    ········TC·········C    20    #
-                  SF | Pimelodus maculatus | 0749    ········TC·········C    20    
-                        SF | Pimelodus fur | 1147    ········TC·········C    20    
-                  SF | Pimelodus maculatus | 1280    ········TC·········C    20    #
-                        SF | Pimelodus fur | 1345    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1400    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1401    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1403    ········TC·········C    20    #
-            SF | Microglanis leptostriatus | 1102    ········TC·········C    20    
-            SF | Microglanis leptostriatus | 1104    ········TC·········C    20    #
-                   SF | Pseudopimelodus sp | 0671    ········TC·········C    20    
-                                                             
-                                        Consensus    CRCCGTCGYMAGCTTRCCCY    20 
-###############################################
-###############################################
-                                                             20      
-                                           '''''''''|'''''''''|      
-                                neo_FWD    CGCCGTCGCAAGCTTACCCT    20
-    SF | Cetopsorhamdia iheringi | 1372    ········TC·········C    20
-         SF | Imparfinis minutus | 1161    ········TC·········C    20
-         SF | Imparfinis minutus | 1370    ········TC·········C    20
-             SF | Rhamdia quelen | 1361    ·······AT······G····    20
-         Jq | Rhamdia aff quelen | 5645    ········T······G····    20
-Jq | Steindachneridion amblyurum | 2996    ········TC·········C    20
-        SF | Pimelodus maculatus | 0749    ········TC·········C    20
-        SF | Pimelodus maculatus | 1280    ········TC·········C    20
-              SF | Pimelodus fur | 1345    ········TC·········C    20
-            SF | Pimelodus pohli | 1400    ········TC·········C    20
-            SF | Pimelodus pohli | 1401    ········TC·········C    20
-            SF | Pimelodus pohli | 1403    ········TC·········C    20
-  SF | Microglanis leptostriatus | 1102    ········TC·········C    20
-  SF | Microglanis leptostriatus | 1104    ········TC·········C    20
-         SF | Pseudopimelodus sp | 0671    ········TC·········C    20
-                                                                     
-                              Consensus    CRCCGTCGYMAGCTTRCCCY    20
-###############################################
-
-                                                                       20        
-                                                     '''''''''|'''''''''|        
-                                          neo_FWD    CGCCGTCGCAAGCTTACCCT    20    
-               Out | Prionace glauca | AF448008.1    ········TC····C·····    20    
-               SF | Synbranchus marmoratus | 1404    ········TC·········C    20    
-               SF | Synbranchus marmoratus | 1405    ········TC·········C    20    
-                 Jq | Eugerres brasilianus | 2943    ····················    20    
-                Jq | Geophagus brasiliensis | 303    ········TC··········    20    
-                Jq | Geophagus brasiliensis | 304    ········TC··········    20    
-                     Jq | Australoheros sp | 6584    ········TC··········    20    
-                 SF | Crenicichla lepidota | 1129    ········TC··········    20    
-                 SF | Crenicichla lepidota | 1130    ········TC··········    20    
-                 SF | Crenicichla lepidota | 1264    ········TC··········    20    
-                      SF | Phalloceros uai | 1368    ········TC···A······    20    
-                      SF | Phalloceros uai | 1369    ········TC···A······    20    
-          Jq | Acinocheirodon melanogramma | 1547    ········TC···A······    20    
-                       Jq | Phalloceros sp | 1551    ········TC···A······    20    
-              SF | Pamphorichthys hollandi | 1098    ········TC···A······    20    
-              SF | Pamphorichthys hollandi | 1099    ········TC···A······    20    
-              Jq | Lycengraulis grossidens | 2918    ·A·······C··········    20    
-           Jq | Anchoviella lepidentostole | 2912    ·A·······C··········    20    
-            SF | Orthospinus franciscensis | 1071    ··············C·····    20    
-                   SF | Moenkhausia costae | 1074    ··············C·····    20    
-                   Jq | Moenkhausia costae | 7812    ··············C·····    20    
-         SF | Moenkhausia sanctaefilomenae | 1111    ····················    20    
-         SF | Moenkhausia sanctaefilomenae | 1112    ····················    20    
-         SF | Moenkhausia sanctaefilomenae | 1113    ····················    20    
-               SF | Hemigrammus marginatus | 1382    ····················    20    
-              SF | Hemigrammus cf gracilis | 1380    ····················    20    
-                SF | Hyphessobrycon santae | 1209    ····················    20    
-                SF | Hyphessobrycon santae | 1210    ····················    20    
-                SF | Hyphessobrycon santae | 1211    ····················    20    
-            SF | Orthospinus franciscensis | 1072    ····················    20    
-                   SF | Astyanax lacustris | 1239    ····················    20    
-                Jq | Astyanax cf lacustris | 5672    ····················    20    
-                   Jq | Astyanax lacustris | 7880    ····················    20    
-               Jq | Astyanax aff fasciatus | 5695    ····················    20    
-               Jq | Oligosarcus macrolepis | 7690    ·A·················C    20    
-                SF | Astyanax cf fasciatus | 1044    ····················    20    
-                SF | Astyanax cf fasciatus | 1048    ····················    20    
-                SF | Astyanax cf fasciatus | 1153    ····················    20    
-               Jq | Astyanax aff fasciatus | 5693    ····················    20    
-               Jq | Astyanax aff fasciatus | 5694    ····················    20    
-                    SF | Bryconops affinis | 1398    ········T···········    20    
-                    SF | Bryconops affinis | 1399    ········T···········    20    
-                      SF | Gymnotus carapo | 1248    ········TC··········    20    
-                      Jq | Gymnotus carapo | 1610    ········TC··········    20    
-                      Jq | Gymnotus carapo | 1631    ········TC··········    20    
-                 SF | Sternopygus macrurus | 1121    ········TC··········    20    
-                 SF | Sternopygus macrurus | 1124    ········TC··········    20    
-                SF | Eigenmannia virescens | 1117    ·········C··········    20    
-                SF | Eigenmannia virescens | 1118    ·········C··········    20    
-                SF | Eigenmannia virescens | 1119    ·········C··········    20    
-                      Jq | Delturus brevis | 1936    ········TC··········    20    
-                    SF | Trichomycterus sp | 1373    ········TC··········    20    
-                    Jq | Harttia garavelloi | 439    ········TC··········    20    
-                           SF | Harttia sp | 1145    ········TC··········    20    
-                           SF | Harttia sp | 1156    ········TC··········    20    
-                         SF | Hisonotus sp | 1108    ·A······TC··········    20    
-                         SF | Hisonotus sp | 1109    ·A······TC··········    20    
-              Jq | Pareiorhaphis stephanus | 4196    ········TC··········    20    
-                        Jq | Hypostomus sp | 5704    ·········C··········    20    
-       SF | Pterygoplichthys etentaculatus | 1030    ·········C··········    20    
-       SF | Pterygoplichthys etentaculatus | 1141    ·········C··········    20    
-                    SF | Hypostomus alatus | 0925    ·········C··········    20    
-                    SF | Hypostomus alatus | 1041    ·········C··········    20    
-                        Jq | Hypostomus sp | 1711    ·········C··········    20    
-             Jq | Hypostomus nigrolineatus | 7893    ·········C··········    20    
-                        Jq | Hypostomus sp | 5650    ·········C··········    20    
-                        Jq | Hypostomus sp | 5703    ·········C··········    20    
-                 SF | Serrasalmus brandtii | 0872    ····················    20    
-                   SF | Pygocentrus piraya | 1229    ····················    20    
-                 SF | Serrasalmus brandtii | 1230    ····················    20    
-                 Jq | Serrasalmus brandtii | 7890    ····················    20    
-                 Jq | Serrasalmus brandtii | 6261    ····················    20    
-       SF | Pterygoplichthys etentaculatus | 0861    ····················    20    
-                  SF | Hoplias intermedius | 1377    ····················    20    
-                 Jq | Hoplias brasiliensis | 1772    ····················    20    
-                  SF | Hoplias malabaricus | 1234    ········T···········    20    
-                  SF | Hoplias malabaricus | 1346    ········T···········    20    
-                           Jq | Hoplias sp | 6630    ········T···········    20    
-                  Jq | Hoplias malabaricus | 7822    ········T···········    20    
-            SF | Acestrorhynchus lacustris | 0917    ····················    20    
-            SF | Acestrorhynchus lacustris | 1136    ····················    20    
-                    SF | Roeboides xenodon | 0916    ····················    20    
-         SF | Phenacogaster franciscoensis | 1333    ····················    20    
-                      SF | Odontostilbe sp | 1076    ····················    20    
-                      SF | Odontostilbe sp | 1077    ····················    20    
-                    SF | Serrapinnus piaba | 1086    ····················    20    
-                    SF | Serrapinnus piaba | 1087    ····················    20    
-                      SF | Odontostilbe sp | 1313    ····················    20    
-            SF | Bryconamericus stramineus | 1150    ····················    20    
-            SF | Bryconamericus stramineus | 1151    ····················    20    
-            SF | Bryconamericus stramineus | 1152    ····················    20    
-                     SF | Piabina argentea | 1306    ····················    20    
-                     SF | Piabina argentea | 1307    ····················    20    
-                    SF | Planaltina myersi | 1367    ····················    20    
-         SFJq2 | Knodus moenkhausii  | KF209618.1    ····················    20    
-             SF | Tetragonopterus chalceus | 0901    ····················    20    
-             SF | Tetragonopterus chalceus | 0984    ····················    20    
-                SF | Apareiodon ibitiensis | 1371    ····················    20    
-                      SF | Parodon hilarii | 1245    ····················    20    
-                      SF | Parodon hilarii | 1332    ····················    20    
-                       SF | Characidium sp | 1308    ·············C······    20    
-                       SF | Characidium sp | 1334    ·············C······    20    
-                    SF | Characidium zebra | 1060    ····················    20    
-                    SF | Characidium zebra | 1335    ····················    20    
-             SF | Characidium lagosantense | 1379    ····················    20    
-             SF | Characidium lagosantense | 1381    ····················    20    
-                   SF | Brycon orthotaenia | 1005    ····················    20    
-                   SF | Brycon orthotaenia | 1037    ····················    20    
-           Jq | Hypomasticus steindachneri | 2984    ····················    20    
-           Jq | Hypomasticus steindachneri | 5664    ····················    20    
-           Jq | Hypomasticus steindachneri | 7826    ····················    20    
-                       SF | Leporinus piau | 0958    ····················    20    
-                  SF | Leporinus taeniatus | 0985    ····················    20    
-                       SF | Leporinus piau | 0986    ····················    20    
-                  SF | Leporinus taeniatus | 1317    ····················    20    
-                       SF | Leporinus piau | 1384    ····················    20    
-                  Jq | Leporinus taeniatus | 1553    ····················    20    
-                     SF | Schizodon knerii | 0953    ····················    20    
-                     SF | Schizodon knerii | 1003    ····················    20    
-                     SF | Schizodon knerii | 1337    ····················    20    
-              SF | Leporinus macrocephalus | 0982    ···················C    20    
-                 SF | Leporinus reinhardti | 1344    ····················    20    
-                Jq | Megaleporinus garmani | 4290    ····················    20    
-                  SF | Leporinus elongatus | 0772    ····················    20    
-                  SF | Leporinus elongatus | 1032    ····················    20    
-                  SF | Leporinus elongatus | 1033    ····················    20    
-              Jq | Megaleporinus elongatus | 1762    ····················    20    
-              Jq | Megaleporinus elongatus | 1761    ····················    20    
-              Jq | Megaleporinus elongatus | 6633    ····················    20    
-                 Jq | Colossoma macropomum | 2871    ····················    20    
-                        SF | Myleus micans | 0763    ····················    20    
-                        SF | Myleus micans | 1162    ····················    20    
-                 SF | Curimatella lepidura | 0900    ········T···········    20    
-                    SF | Roeboides xenodon | 0905    ········T···········    20    
-                 SF | Curimatella lepidura | 0906    ········T···········    20    
-                 SF | Curimatella lepidura | 0907    ········T···········    20    
-                  SF | Cyphocharax gilbert | 1054    ········T···········    20    
-                  SF | Cyphocharax gilbert | 1056    ········T···········    20    
-              SF | Steindachnerina elegans | 1284    ········T···········    20    
-               Jq | Steindachnerina elegans | 231    ········T···········    20    
-              Jq | Steindachnerina elegans | 6586    ········T···········    20    
-                 SF | Prochilodus costatus | 0664    ····················    20    
-                SF | Prochilodus argenteus | 0739    ····················    20    
-                SF | Prochilodus argenteus | 0742    ····················    20    
-                SF | Prochilodus argenteus | 0779    ····················    20    
-                 SF | Prochilodus costatus | 1281    ····················    20    
-                 SF | Prochilodus costatus | 1339    ····················    20    
-                   Jq | Prochilodus hartii | 1765    ····················    20    
-                 Jq | Prochilodus costatus | 2860    ····················    20    
-                Jq | Prochilodus argenteus | 5612    ····················    20    
-                   Jq | Prochilodus hartii | 7033    ····················    20    
-          Out | Prochilodus costatus | NC027690.1    ····················    20    
-                         Jq | Corydoras sp | 1568    ·A·······C··········    20    
-               SF | Hoplosternum littorale | 1215    ········TC··········    20    
-               SF | Hoplosternum littorale | 1274    ········TC··········    20    
-               Jq | Hoplosternum littorale | 2643    ········TC··········    20    
-             Jq | Rhamdia cf jequitinhonha | 3054    ········TC·········C    20    
-                       SF | Rhamdia quelen | 1361    ·······AT······G····    20    
-                   Jq | Rhamdia aff quelen | 5645    ········T······G····    20    
-                  SF | Pimelodella vittata | 1287    ···············G····    20    
-                  SF | Pimelodella vittata | 1288    ···············G····    20    
-                  SF | Pimelodella vittata | 1289    ···············G····    20    
-              SF | Cetopsorhamdia iheringi | 1372    ········TC·········C    20    
-                   SF | Imparfinis minutus | 1161    ········TC·········C    20    
-                   SF | Imparfinis minutus | 1370    ········TC·········C    20    
-    SFJq2 | Conorhynchos conirostris | JX899737.1    ·A······TC·········C    20    
-          Jq | Steindachneridion amblyurum | 2996    ········TC·········C    20    
-          SF | Pseudoplatystoma corruscans | 1135    ········TC·········C    20    
-                  SF | Pimelodus maculatus | 0749    ········TC·········C    20    
-                        SF | Pimelodus fur | 1147    ········TC·········C    20    
-                  SF | Pimelodus maculatus | 1280    ········TC·········C    20    
-                        SF | Pimelodus fur | 1345    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1400    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1401    ········TC·········C    20    
-                      SF | Pimelodus pohli | 1403    ········TC·········C    20    
-            SF | Microglanis leptostriatus | 1102    ········TC·········C    20    
-            SF | Microglanis leptostriatus | 1104    ········TC·········C    20    
-                   SF | Pseudopimelodus sp | 0671    ········TC·········C    20    
-                      SF | Bunocephalus sp | 1158    ········TC··········    20    
-                      SF | Bunocephalus sp | 1159    ········TC··········    20    
-            SF | Franciscodoras marmoratus | 0708    ········TC··········    20    
-                Jq | Wertheimeria maculata | 7906    ········TC··········    20    
-                Jq | Wertheimeria maculata | 7817    ········TC··········    20    
-             SF | Trachelyopterus galeatus | 0602    ········TC··········    20    
-             SF | Trachelyopterus galeatus | 1243    ········TC··········    20    
-          Jq | Trachelyopterus cf galeatus | 5675    ········TC··········    20    
-           Jq | Trachelyopterus striatulus | 6583    ········TC··········    20    
-                                                             
-                                        Consensus    CGCCGTCGYMAGCWTACCCY    20    
-                              
-###############################################
-# NeoFish ggseqlogo
-                              neo_FWD_seqs
 
 seqs_logo_plot <- ggplot2::ggplot() +
   ggseqlogo::geom_logo(data = as.character(neo_FWD_seqs),
@@ -7508,20 +6340,6 @@ DB_tbl$`Composed name`[DB_tbl$Names %in% pool_sps]
 BrowseSeqs(dna_order[DB_tbl$`Composed name`[DB_tbl$Names %in% pool_sps]],colorPatterns = FALSE)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 neo_ampli<- subseq(x = dna_aligned,685,896)
 
 BrowseSeqs(neo_ampli)
@@ -7530,42 +6348,18 @@ BrowseSeqs(neo_ampli)
 
 neo_ampli
 
-
-
-
 neo_dna_order <- subseq(dna_order,367,577)
-
 
 names(neo_dna_order)
 
 BrowseSeqs(dna_order[126:136],highlight = 0,threshold=0.2,colorPatterns = FALSE)
 BrowseSeqs(neo_dna_order[c(184,186)],highlight = 0)
 
-
-writeXStringSet(x = neo_dna_order,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/neo_DB_order_clust.fasta",format = "fasta")
-
-
-
-
-
-
-
-
+writeXStringSet(x = neo_dna_order,filepath = "~/prjcts/fish_eDNA/data/refs/db/neo_DB_order_clust.fasta",format = "fasta")
 
 names(neo_ampli)
 
 BrowseSeqs(neo_ampli[c("Jq | Trachelyopterus cf galeatus | 5675","Jq | Trachelyopterus striatulus | 6583")],highlight = 1)
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7582,48 +6376,14 @@ consensus_neo_REV <- ConsensusSequence(neo_REV_DNAFISH)
 # NeoFIsh ggseqlogo ----
 
 
-
-
-
-writeXStringSet(x = neo_ampli,filepath = "/home/heron/prjcts/fish_eDNA/data/refs/db/neo_ampli.fasta",format = "fasta")
+writeXStringSet(x = neo_ampli,filepath = "~/prjcts/fish_eDNA/data/refs/db/neo_ampli.fasta",format = "fasta")
 
 
 names(dna_all)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
 
 
 
 
-```{r echo=FALSE,eval=FALSE}
-#cite
-# https://jonlefcheck.net/2012/10/24/nmds-tutorial-in-r/#:~:text=Keep%20going%2C%20and%20imagine%20as,and%20to%20spare%20your%20thinker).
 
-# http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/
-
-# https://www.davidzeleny.net/anadat-r/doku.php/en:pcoa_nmds
-
-```
-
-<br>
-
-
-**This is a partial report, intended to show the current state of analyses. Many procedures and conclusions might change as the pipeline evolves. If you notice errors/mistakes/typos, or have any suggestions, we would be glad to know. _heronoh@gmail.com_**
+**This is a dinamic report, intended to show the current state of analyses. Many procedures and conclusions might change as the pipeline evolves. If you notice errors/mistakes/typos, or have any suggestions, we would be glad to know. _heronoh@gmail.com_**
