@@ -4,6 +4,7 @@ author:
   - "Hilário, OH; Mendes, IS; Sales, NG; Carvalho, DC"
 date: "10/03/2022"
 output: 
+  github_document:
   html_document:
     code_download: yes
     theme: flatly
